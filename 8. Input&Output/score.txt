@@ -1,4 +1,0 @@
-Math: 100
-English: 80
-science: 85
-Cording: 100

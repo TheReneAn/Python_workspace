@@ -46,6 +46,23 @@ character_height = character_size[1]
 character_x_pos = (screen_width / 2) - (character_width / 2) 
 character_y_pos = screen_height - character_height - stage_height  # At the end of the screen
 
+# Move Coordinate
+character_to_x = 0
+
+# Move Speed
+character_speed = 5
+
+# Weapon
+weapon = pygame.image.load(os.path.join(image_path, "weapon.png"))
+
+weapon_size = weapon.get_rect().size
+weapon_width = weapon_size[0]
+
+# Weapon can shoot multiple times
+weapons = []
+
+weapon_speed = 10
+
 ########################################################################################################
 #                                       Event (Keybord, mouse etc)                                     #
 ########################################################################################################
@@ -59,11 +76,37 @@ while running:
         if event.type == pygame.QUIT:   # Has an event happened to close the window?
             running = False             # The game was finished
 
+        if event.type == pygame.KEYDOWN:    # Check puch the key? or not
+            if event.key == pygame.K_LEFT:
+                character_to_x -= character_speed
+            elif event.key == pygame.K_RIGHT:
+                character_to_x += character_speed
+            elif event.key == pygame.K_SPACE:
+                weapon_x_pos = character_x_pos + (character_width / 2) - (weapon_width / 2)
+                weapon_y_pos = character_y_pos
+                weapons.append([weapon_x_pos, weapon_y_pos])
+
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                character_to_x = 0
+
 ########################################################################################################
 #                                       Character Position / boundary                                 #
 ########################################################################################################  
 
+    character_x_pos += character_to_x
 
+    # Character screeen boundary
+    if character_x_pos < 0:
+        character_x_pos = 0
+    elif character_x_pos > screen_width - character_width:
+        character_x_pos = screen_width - character_width
+
+    # Weapon
+    weapons = [ [w[0], w[1] - weapon_speed] for w in weapons]
+
+    # Remove weapons
+    weapons = [ [w[0], w[1]] for w in weapons if w[1] > 0]
 
 ########################################################################################################
 #                                       Collition initialization                                       #
@@ -75,6 +118,10 @@ while running:
 ########################################################################################################
 
     screen.blit(background, (0,0))      # Make the background
+
+    for weapon_x_pos, weapon_y_pos in weapons:
+        screen.blit(weapon, (weapon_x_pos, weapon_y_pos))
+
     screen.blit(stage, (0, screen_height - stage_height))  # Make the Character on the screen
     screen.blit(character, (character_x_pos, character_y_pos))  # Make the Character on the screen
 

@@ -64,6 +64,10 @@ total_time = 10
 # Start time
 start_ticks = pygame.time.get_ticks()       
 
+# Game Over message
+# TimeOut, Mission Complete, Game Over
+game_result = "Game Over"
+
 ########################################################################################################
 #                                       Event (Keybord, mouse etc)                                     #
 ########################################################################################################
@@ -155,6 +159,13 @@ while running:
         running = False
 
     pygame.display.update()             # Make the game background again (Each frame)
+
+# Game Over message
+msg = game_font.render(game_result, True, (255, 255, 0))    # Yellow
+msg_rect = msg.get_rect(center=(int(screen_width / 2, ), int(screen_height / 2)))
+screen.blit(msg, msg_rect)
+
+pygame.display.update()  
 
 # a moment's wait
 pygame.time.delay(2000)                 # 2 second
